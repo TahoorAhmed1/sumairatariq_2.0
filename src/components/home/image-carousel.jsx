@@ -31,9 +31,10 @@ function ImageCarousel({ newClass, data }) {
                     ? `https://api.sumairatariq.com/GetImage/${data?.filename}`
                     : sliderImage1
                 }
-                alt=""
+                alt="home"
                 width={1000}
                 height={1000}
+                priority
                 className="w-full mx-auto md:aspect-[9/3.8] aspect-[9/8] inline-block object-cover object-center "
               />
             </CarouselItem>

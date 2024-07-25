@@ -144,6 +144,7 @@ function ProductDetail({ data }) {
                         alt="product image"
                         className="object-cover object-center rounded-xl"
                         src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/GetImage/${data?.filename}`}
+                        priority
                       />
                     </div>
                   </CarouselItem>
@@ -172,6 +173,7 @@ function ProductDetail({ data }) {
                         alt="image of a girl posing"
                         className="object-cover object-center h-full w-full rounded-xl"
                         src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/GetImage/${data?.filename}`}
+                        priority
                       />
                     </div>
                   </CarouselItem>
@@ -206,6 +208,7 @@ function ProductDetail({ data }) {
                         alt="image of a girl posing"
                         className="object-cover object-center h-full w-full rounded-xl"
                         src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/GetImage/${data?.filename}`}
+                        priority
                       />
                     </div>
                   </CarouselItem>

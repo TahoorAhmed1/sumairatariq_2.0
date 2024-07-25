@@ -2,7 +2,6 @@ import Design from "@/components/product/designe";
 
 function page({ params, searchParams }) {
   let { category, subcategory, tags, color, minPrice, maxPrice } = searchParams;
-  console.log(searchParams);
   return (
     <Design
       id={params?.id}
