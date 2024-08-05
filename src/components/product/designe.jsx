@@ -2,14 +2,17 @@
 import ProductCard from "@/components/common/product-card";
 import SideNav from "@/components/product/side-nav";
 import { API } from "@/services";
-import { Box, Filter, LoaderIcon } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { Filter, LoaderIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { SideNavDrawer } from "@/components/product/side-nav-drawer";
 import InfiniteScroll from "react-infinite-scroll-component";
 import debounce from "lodash.debounce";
 import { Skeleton } from "@/components/ui/skeleton";
 import Heading from "@/components/common/heading";
+import { BsFillGrid3X3GapFill, BsFillGridFill } from "react-icons/bs";
+import { TfiLayoutGrid4Alt } from "react-icons/tfi";
+import Link from "next/link";
 
 function Design({
   id,
@@ -31,6 +34,7 @@ function Design({
   const [selectedColors, setSelectedColors] = useState([]);
   const [selectedSizes, setSelectedSizes] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [grid, setGrid] = useState(3);
 
   const priceList = [
     { priceOne: 500, priceTwo: 1000 },
@@ -89,6 +93,7 @@ function Design({
   }, 100);
 
   useEffect(() => {
+    setLoading(true);
     setItems([]);
     fetchData();
   }, [router, category, subcategory]);
@@ -114,7 +119,7 @@ function Design({
   return (
     <div className="py-10 min-h-screen">
       <h1 className="text-center text-3xl font-semibold mb-10">{category}</h1>
-      <div className="container">
+      <div className="sm:container mx-auto px-2">
         <div>
           <div className="items-center flex justify-end lg:hidden mb-5">
             <Filter onClick={setOpenHandle} className="w-6 h-6" />
@@ -143,7 +148,7 @@ function Design({
         </div>
 
         <div className="w-full h-full flex gap-5 ">
-          <div className="hidden lg:block    xl:w-[36%] lg:w-[45%]  overflow-auto h-full">
+          <div className="hidden lg:block    xl:w-[32%] lg:w-[42%]  overflow-auto h-full">
             <div className="flex  border-r  ">
               <Heading
                 title={"Filter"}
@@ -170,14 +175,36 @@ function Design({
             />
           </div>
           <div className="w-full">
+            <div className=" justify-between mb-4 lg:flex hidden">
+              <div className="flex text-[14px] items-center text-slate-700">
+                <Link href={"/"}>Home</Link>/{category}
+              </div>
+              <div className="flex justify-end gap-x-3 items-center ">
+                <BsFillGridFill
+                  className="w-5 h-5"
+                  onClick={() => {
+                    setGrid(3);
+                  }}
+                />
+                <BsFillGrid3X3GapFill
+                  className="w-5 h-5"
+                  onClick={() => {
+                    setGrid(4);
+                  }}
+                />
+              </div>
+            </div>
+
             {loading ? (
-              <div className="grid xl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-5 w-full ">
+              <div
+                className={`grid lg:grid-cols-${grid} xs:grid-cols-2 grid-cols-1  gap-3 w-full `}
+              >
                 {Array(6)
                   .fill()
                   .map((_, index) => (
                     <div key={index} className="flex flex-col space-y-2">
                       <Skeleton
-                        className="h-[311px] w-full rounded-[8px] bg-[#CCCCCC]"
+                        className="sm:h-[310px] xs:h-[230px] h-[280px] w-full rounded-[8px] bg-[#CCCCCC]"
                         animation="wave"
                       />
                       <Skeleton
@@ -204,7 +231,9 @@ function Design({
                       </div>
                     }
                   >
-                    <div className="grid xl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-5 w-full ">
+                    <div
+                      className={`grid  lg:grid-cols-${grid} xs:grid-cols-2  grid-cols-1 gap-3 w-full `}
+                    >
                       {items.map((e, index) => (
                         <ProductCard key={index} data={e} />
                       ))}

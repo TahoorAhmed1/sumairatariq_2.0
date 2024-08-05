@@ -22,7 +22,9 @@ function ProductCarousel({ newClass, data }) {
             <CarouselItem
               key={index}
               className={
-                newClass ? newClass : `xl:basis-1/5 md:basis-1/3  sm:basis-1/2 `
+                newClass
+                  ? newClass
+                  : `xl:basis-1/5 md:basis-1/3  xs:basis-1/2  `
               }
             >
               <ProductCard data={e} />

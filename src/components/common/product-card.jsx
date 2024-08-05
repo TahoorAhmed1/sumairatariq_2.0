@@ -14,6 +14,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { useWishlistCart } from "@/store/wishlist-store";
 import { notify } from "@/lib/notify";
+
 function ProductCard({ data }) {
   let image = data?.Images?.filter(
     (ev) => ev?.type.split("/")[0] === "image"
@@ -61,7 +62,7 @@ function ProductCard({ data }) {
     >
       <div className="bg-white shadow-lg w-full overflow-hidden border-0 transition duration-500 relative rounded-[8px]">
         <div className="relative">
-          <div className="h-[330px] overflow-hidden relative">
+          <div className="sm:h-[330px] xs:h-[250px] h-[300px] overflow-hidden relative">
             <motion.div
               className="absolute inset-0"
               initial={{ scale: 1 }}
@@ -88,20 +89,29 @@ function ProductCard({ data }) {
         </div>
         <div className="py-2 px-0">
           <div className="text-[#333] text-[12px] text-center font-medium mb-1">
-            <p>
-              {data?.product?.name}{" "}
-              <span className="text-[11px]">({data?.color}) </span>
-            </p>{" "}
-            <p className="text-[11px]">({data?.size}) </p>
+            <p>{data?.product?.name} </p>{" "}
+            <p className="text-[10px]">
+              ({data?.size})
+              <span className="text-[10px] ml-1">({data?.color}) </span>
+            </p>
           </div>
-          <div className="text-[#d33] text-[13px] font-semibold text-center">
-            PKR <span>{data?.price}</span>
+          <div className="text-[#d33] text-[13px] font-semibold text-center flex justify-center gap-x-2 items-center">
+            {data?.Discount !== 0 ? (
+              <span className="line-through text-[#bdbdbd]">
+                PKR. {data?.price}
+              </span>
+            ) : null}
+            <span>
+              {data?.Discount !== 0
+                ? (data?.Discount / 100) * data?.price
+                : data?.price}
+            </span>
           </div>
-          <div className="lg:block hidden  ">
+          <div className="lg:block hidden">
             <AnimatePresence>
               {isVisible && (
                 <motion.div
-                  className="flex flex-col bg-white absolute rounded-2xl top-4 right-4 px-2 py-3 gap-y-4"
+                  className="flex flex-col bg-white absolute rounded-2xl top-4 right-4 sm:px-2 sm:py-3 sm:gap-y-4 gap-y-3 py-2 px-1.5"
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
@@ -112,7 +122,7 @@ function ProductCard({ data }) {
                       <TooltipTrigger asChild>
                         <Heart
                           fill={`${currentProduct ? "red" : "none"}`}
-                          className="w-5 h-5 text-red-600"
+                          className="sm:w-5 sm:h-5 h-4 w-4 text-red-600"
                           onClick={
                             currentProduct
                               ? handleRemoveClick
@@ -141,7 +151,7 @@ function ProductCard({ data }) {
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <CircleAlert className="w-5 h-5 text-slate-600" />
+                        <CircleAlert className="sm:w-5 sm:h-5 h-4 w-4 text-slate-600" />
                       </TooltipTrigger>
                       <TooltipContent className="bg-white text-black text-xs font-semibold rounded-[4px]">
                         <p>Coming soon</p>
@@ -152,7 +162,7 @@ function ProductCard({ data }) {
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <Search className="w-5 h-5 text-slate-600" />
+                        <Search className="sm:w-5 sm:h-5 h-4 w-4 text-slate-600" />
                       </TooltipTrigger>
                       <TooltipContent className="bg-white text-black text-xs font-semibold rounded-[4px] ">
                         <p>Coming soon</p>
@@ -163,14 +173,14 @@ function ProductCard({ data }) {
               )}
             </AnimatePresence>
           </div>
-          <div className="lg:hidden block   ">
-            <div className="flex flex-col bg-white absolute rounded-2xl top-4 right-4 px-2 py-3 gap-y-4">
+          <div className="lg:hidden block">
+            <div className="flex flex-col bg-white absolute rounded-2xl top-4 right-4 sm:px-2 sm:py-3 sm:gap-y-4 gap-y-3 py-2 px-1.5">
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Heart
                       fill={`${currentProduct ? "red" : "none"}`}
-                      className="w-5 h-5 text-red-600"
+                      className="sm:w-5 sm:h-5 h-4 w-4 text-red-600"
                       onClick={
                         currentProduct ? handleRemoveClick : handleHeartClick
                       }
@@ -197,7 +207,7 @@ function ProductCard({ data }) {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <CircleAlert className="w-5 h-5 text-slate-600" />
+                    <CircleAlert className="sm:w-5 sm:h-5 h-4 w-4 text-slate-600" />
                   </TooltipTrigger>
                   <TooltipContent className="bg-white text-black text-xs font-semibold rounded-[4px]">
                     <p>Coming soon</p>
@@ -208,7 +218,7 @@ function ProductCard({ data }) {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Search className="w-5 h-5 text-slate-600" />
+                    <Search className="sm:w-5 sm:h-5 h-4 w-4 text-slate-600" />
                   </TooltipTrigger>
                   <TooltipContent className="bg-white text-black text-xs font-semibold rounded-[4px] ">
                     <p>Coming soon</p>

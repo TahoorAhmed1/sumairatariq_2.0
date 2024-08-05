@@ -46,7 +46,7 @@ function Review({ productId, reviews, setReviews, setReview }) {
         product_id: productId,
       };
       await API.createRating(payload);
-      setReviews([...reviews, payload]);
+      setReviews([...reviews, { ...payload, createdAt: Date.now() }]);
       setRating(0);
       setHover(0);
       form.reset();

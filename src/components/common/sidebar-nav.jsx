@@ -8,11 +8,13 @@ function SidebarNav({ a, setOpen }) {
   return (
     <div className=" border-slate-200   ">
       <div
-        onClick={() => setShowColors(!showColors)}
+        onClick={(e) => {
+          e.stopPropagation();
+          setShowColors(!showColors);
+        }}
         className="flex items-center justify-between border-b text-black text-sm bg-slate-50 "
       >
         <button
-          onClick={() => setOpen(true)}
           href={`/product-design/${a.id}?category=${a?.name}`}
           className="px-4"
         >
@@ -21,7 +23,7 @@ function SidebarNav({ a, setOpen }) {
         <span
           className={`${
             showColors ? "transform rotate-180" : ""
-          } transition-transform duration-200 ease-in-out px-4 py-3`}
+          } transition-transform duration-200 ease-in-out px-4 py-4`}
         >
           <ArrowDown className="w-[14px] h-[14px]" />
         </span>

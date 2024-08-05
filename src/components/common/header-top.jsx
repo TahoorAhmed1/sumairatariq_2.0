@@ -1,5 +1,4 @@
 import { Heart, ShoppingCart, UserRound } from "lucide-react";
-import Button from "./button";
 import Link from "next/link";
 import CryptoJS from "crypto-js";
 import { useProductCart } from "@/store/cart-store";

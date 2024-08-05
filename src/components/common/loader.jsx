@@ -10,7 +10,8 @@ function Loader() {
         className="w-[210px] mx-auto"
         width={1000}
         height={1000}
-        loading="lazy"
+        loading="eager"
+        priority
       />
       <span className="loader-37"></span>
     </div>

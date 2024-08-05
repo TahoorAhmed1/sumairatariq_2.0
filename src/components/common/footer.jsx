@@ -10,6 +10,7 @@ import BottomNav from "./bottom-nav";
 import { API } from "@/services";
 import { notify } from "@/lib/notify";
 import { LoaderIcon } from "lucide-react";
+import { FaFacebook, FaInstagram, FaTiktok, FaYoutube } from "react-icons/fa6";
 
 function Footer() {
   const [loading, setLoading] = useState(false);
@@ -49,15 +50,16 @@ function Footer() {
       <BottomNav token={token} />
 
       <footer className="bg-black   lg:block hidden">
-        <div className="container py-4">
+        <div className="container px-2 py-4">
           <div className="flex md:flex-row justify-between flex-col md:gap-10 gap-5  lg:py-6">
             <div className="flex flex-col gap-5">
               <Link href={`/`}>
                 <div className="logo">
                   <Image
                     src={logo}
-                    width={500}
-                    height={500}
+                    width={1000}
+                    height={1000}
+                    loading="eager"
                     className="w-[140px]"
                     alt="logo"
                   />
@@ -131,16 +133,48 @@ function Footer() {
                   {loading ? (
                     <LoaderIcon className="animate-spin w-5 h-5" />
                   ) : (
-                    "    Subscribe"
+                    "Subscribe"
                   )}
                 </Button>
               </form>
+              <div className="flex items-center gap-x-4 mt-4">
+                <Link
+                  href={
+                    "https://www.facebook.com/SumairaTariqPK?mibextid=ZbWKwL"
+                  }
+                  target="_blank"
+                >
+                  <FaFacebook className="w-5 h-5" />
+                </Link>
+                <Link
+                  href={
+                    "https://www.instagram.com/sumairatariqofficial/?igshid=NjIwNzIyMDk2Mg%3D%3D"
+                  }
+                  target="_blank"
+                >
+                  <FaInstagram className="w-5 h-5" />
+                </Link>
+                <Link
+                  href={
+                    "https://www.tiktok.com/@sumairatariqofficial?_t=8ieWKKBDidU&_r=1"
+                  }
+                  target="_blank"
+                >
+                  <FaTiktok className="w-5 h-5" />
+                </Link>
+                <Link
+                  href={"https://www.youtube.com/@sumairatariq9706"}
+                  target="_blank"
+                >
+                  <FaYoutube className="w-5 h-5" />
+                </Link>
+              </div>
             </div>
           </div>
         </div>
         <Separator className="border-t border-slate-500" />
         <div className="py-6 bg-black md:flex md:items-center md:justify-between">
-          <div className="container">
+          <div className="sm:container px-2">
             <span className="text-sm text-white dark:text-gray-300 sm:text-center">
               © Copyright 2023 Sumaira Tariq. All Rights Reserved.
             </span>

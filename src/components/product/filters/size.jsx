@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 
 const Size = ({ setSelectedSizes, selectedSizes }) => {
   const [size, setSize] = useState([]);
-  const [showColors, setShowColors] = useState(true);
+  const [showColors, setShowColors] = useState(false);
   const getSize = async () => {
     try {
       const res = await API.getSize();
@@ -67,7 +67,7 @@ const Size = ({ setSelectedSizes, selectedSizes }) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.1 }}
         >
-          <ul className="flex flex-col gap-2 text-xs lg:text-sm text-black">
+          <ul className="flex flex-col gap-2 text-[14.5px] lg:text-[15px] text-black">
             {size.map((item) => (
               <motion.li
                 key={item._id}

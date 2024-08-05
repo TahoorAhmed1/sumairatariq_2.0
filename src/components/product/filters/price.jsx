@@ -67,7 +67,7 @@ const Price = ({ selectedPrices, setSelectedPrices }) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.1 }}
         >
-          <ul className="flex flex-col gap-2 text-xs lg:text-sm text-black">
+          <ul className="flex flex-col gap-2 text-[14.5px] lg:text-[15px] text-black">
             {priceList.map((item, index) => (
               <motion.li
                 key={index}

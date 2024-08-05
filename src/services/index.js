@@ -82,7 +82,7 @@ API.GetFilterProduct = ({
       tags ? `&size=${tags}` : ""
     }${minPrice ? `&minPrice=${minPrice}` : ""}${
       maxPrice ? `&maxPrice=${maxPrice}` : ""
-    }&page=${page}&pageSize=6`
+    }&page=${page}&pageSize=9`
   );
 };
 

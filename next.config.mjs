@@ -1,9 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    optimizePackageImports: ["package-name"],
-  },
   images: {
+    minimumCacheTTL: 60,
     remotePatterns: [
       {
         protocol: "https",
@@ -18,6 +16,11 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "testapi.sumairatariq.com",
+        pathname: "**",
+      },
+      {
+        protocol: "https",
+        hostname: "st.ggilab.com",
         pathname: "**",
       },
     ],

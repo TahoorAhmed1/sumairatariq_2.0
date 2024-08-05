@@ -10,20 +10,20 @@ import { useProductCart } from "@/store/cart-store";
 import { useRouter } from "next/navigation";
 import { useProductDrawer } from "@/store/use-drawer";
 import { notify } from "@/lib/notify";
-import Heading from "../common/heading";
-import ProductCarousel from "../common/product-crousel";
 import { API } from "@/services";
-import { Skeleton } from "../ui/skeleton";
 import Review from "./review-form";
+import { Editor, EditorState, convertFromRaw } from "draft-js";
+import { Skeleton } from "../ui/skeleton";
+import ProductCarousel from "../common/product-crousel";
+import Heading from "../common/heading";
 
 function ProductDetail({ data }) {
   const router = useRouter();
   const { addToCart, buyNow, cart } = useProductCart();
-  const description = JSON.parse(data?.Description);
   const params = useSearchParams();
   const paramsColor = params.get("color");
   const paramsSize = params.get("size");
-  const { isOpen, setOpen } = useProductDrawer();
+  const { setOpen } = useProductDrawer();
   const [stock, setStock] = useState();
   const [color, setColor] = useState(paramsColor);
   const [size, setSize] = useState(paramsSize);
@@ -66,13 +66,14 @@ function ProductDetail({ data }) {
     let item = data?.items?.filter((item) => item?.color === color);
     setStock(item[0].QuantityAvailable);
     setProductId(item[0].id);
-  }, [color, data, paramsColor]);
+  }, [data]);
 
-  const filterImageByColor = (color) => {
+  const filterImageByColor = async (color) => {
+    setImage([]);
     let newdata = data?.Images?.filter((data) => {
       return data.itemColor == color;
     });
-    setImage(newdata.length > 0 ? newdata : data?.Images);
+    setImage(newdata);
   };
 
   const [sliderImages, setSliderImages] = useState([]);
@@ -107,121 +108,170 @@ function ProductDetail({ data }) {
   }, []);
 
   const [isReview, setReview] = useState(false);
+  const filteredImages = data?.Images?.filter((image) => {
+    const colors = data?.Color?.split(",") || [];
+    return colors.includes(image.itemColor);
+  });
+  console.log((data?.Discount / 100) * data?.price);
 
   return (
-    <main>
-      <div className="flex xl:flex-row flex-col bg-white gap-4 items-start justify-center pt-10 container overflow-hidden">
+    <main className="overflow-x-hidden">
+      <div className=" absolute -left-[9999px]">
+        {filteredImages?.map((data, index) => {
+          return (
+            <div key={index} className="w-1 h-1 opacity-0  cursor-pointer">
+              <div className=" flex justify-center items-center">
+                <Image
+                  width={1000}
+                  height={1000}
+                  loading={"lazy"}
+                  alt="product image"
+                  quality={0}
+                  src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/GetImage/${data?.filename}`}
+                  priority
+                />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="flex xl:flex-row flex-col bg-white gap-4 items-start justify-center pt-10 sm:container mx-auto px-2 overflow-hidden">
         <div className="w-full  gap-4 lg:flex hidden ">
-          <div className="flex flex-col" style={{ height: "750px" }}>
-            <Carousel
-              setApi={setApi1}
-              opts={{
-                align: "start",
-                loop: true,
-              }}
-              plugins={[
-                Autoplay({
-                  delay: 4000,
-                }),
-              ]}
-              orientation="vertical"
-              className="xl:w-[173px] w-[250px] "
-            >
-              <CarouselContent className="h-[750px]">
-                {image?.map((data, index) => (
-                  <CarouselItem
-                    key={index}
-                    className="h-full basis-1/3 cursor-pointer"
-                  >
-                    <div
-                      onClick={() => handleSliderItemClick(index)}
-                      className="h-full flex justify-center items-center"
+          {image?.length < 0 ? (
+            <Skeleton className="xl:w-[173px] w-[250px] h-[750px] bg-[#CCCCCC]/90" />
+          ) : (
+            <div className="flex flex-col" style={{ height: "750px" }}>
+              <Carousel
+                setApi={setApi1}
+                opts={{
+                  align: "start",
+                  loop: true,
+                }}
+                plugins={[
+                  Autoplay({
+                    delay: 4000,
+                  }),
+                ]}
+                orientation="vertical"
+                className="xl:w-[173px] w-[250px] "
+              >
+                <CarouselContent className="h-[750px]">
+                  {image?.map((data, index) => (
+                    <CarouselItem
+                      key={index}
+                      className="h-full basis-1/3 cursor-pointer"
                     >
-                      <Image
-                        width={1000}
-                        loading={"eager"}
-                        height={1000}
-                        alt="product image"
-                        className="object-cover object-center rounded-xl"
-                        src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/GetImage/${data?.filename}`}
-                        priority
-                      />
-                    </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-            </Carousel>
-          </div>
-          <div className="h-[750px] ">
-            <Carousel
-              setApi={setApi2}
-              className="w-[549px]"
-              opts={{
-                align: "start",
-                loop: true,
-              }}
-              orientation="horizontal"
-            >
-              <CarouselContent className="h-[750px]">
-                {image?.map((data, index) => (
-                  <CarouselItem key={index} className="h-full  cursor-pointer">
-                    <div onClick={() => handleSliderItemClick(index)}>
-                      <Image
-                        width={1000}
-                        loading={"eager"}
-                        height={1000}
-                        alt="image of a girl posing"
-                        className="object-cover object-center h-full w-full rounded-xl"
-                        src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/GetImage/${data?.filename}`}
-                        priority
-                      />
-                    </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-            </Carousel>
-          </div>
-        </div>
-        <div className="w-full gap-4 lg:hidden flex justify-center">
-          <div className="h-full w-full">
-            <Carousel
-              className="h-full w-full "
-              opts={{
-                align: "start",
-                loop: true,
-              }}
-              plugins={[
-                Autoplay({
-                  delay: 4000,
-                }),
-              ]}
-              orientation="horizontal"
-            >
-              <CarouselContent className="">
-                {image?.map((data, index) => (
-                  <CarouselItem key={index} className="h-full">
-                    <div onClick={() => handleSliderItemClick(index)}>
-                      <Image
-                        width={1000}
-                        loading={"eager"}
-                        height={1000}
-                        alt="image of a girl posing"
-                        className="object-cover object-center h-full w-full rounded-xl"
-                        src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/GetImage/${data?.filename}`}
-                        priority
-                      />
-                    </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-            </Carousel>
-          </div>
+                      <div
+                        onClick={() => handleSliderItemClick(index)}
+                        className="h-full flex justify-center items-center"
+                      >
+                        <Image
+                          width={1000}
+                          loading={"eager"}
+                          height={1000}
+                          alt="product image"
+                          className={`object-cover object-center rounded-xl `}
+                          src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/GetImage/${data?.filename}`}
+                          priority
+                        />
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+              </Carousel>
+            </div>
+          )}
+          {image?.length < 0 ? (
+            <Skeleton className="w-full h-[750px] bg-[#CCCCCC]/90" />
+          ) : (
+            <div className="h-[750px] ">
+              <Carousel
+                setApi={setApi2}
+                className="w-[549px]"
+                opts={{
+                  align: "start",
+                  loop: true,
+                }}
+                orientation="horizontal"
+              >
+                <CarouselContent className="h-[750px]">
+                  {image?.map((data, index) => (
+                    <CarouselItem
+                      key={index}
+                      className="h-full  cursor-pointer"
+                    >
+                      <div onClick={() => handleSliderItemClick(index)}>
+                        <Image
+                          width={1000}
+                          loading={"eager"}
+                          height={1000}
+                          alt="image of a girl posing"
+                          className={`object-cover object-center h-full w-full rounded-xl `}
+                          src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/GetImage/${data?.filename}`}
+                          priority
+                        />
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+              </Carousel>
+            </div>
+          )}
         </div>
 
+        {image?.length < 0 ? (
+          <Skeleton className="w-full h-full bg-[#CCCCCC]/90" />
+        ) : (
+          <div className="w-full gap-4 lg:hidden flex justify-center">
+            <div className="h-full w-full">
+              <Carousel
+                className="h-full w-full "
+                opts={{
+                  align: "start",
+                  loop: true,
+                }}
+                plugins={[
+                  Autoplay({
+                    delay: 4000,
+                  }),
+                ]}
+                orientation="horizontal"
+              >
+                <CarouselContent className="">
+                  {image?.map((data, index) => (
+                    <CarouselItem key={index} className="h-full">
+                      <div onClick={() => handleSliderItemClick(index)}>
+                        <Image
+                          width={1000}
+                          loading={"eager"}
+                          height={1000}
+                          alt="image of a girl posing"
+                          className={`object-cover object-center h-full w-full rounded-xl `}
+                          src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/GetImage/${data?.filename}`}
+                          priority
+                        />
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+              </Carousel>
+            </div>
+          </div>
+        )}
         <div className=" w-[90%]  flex flex-col gap-y-5">
           <h1 className="lg:text-2xl text-xl font-semibold">{data?.name}</h1>
           <span className="lg:text-2xl text-xl font-semibold text-[#d33]">
-            PKR. {data?.price}
+            {data?.Discount !== 0 ? (
+              <span className="line-through text-[#bdbdbd]">
+                PKR. {data?.price}{" "}
+              </span>
+            ) : null}
+            <span>
+              {data?.Discount !== 0
+                ? (data?.Discount / 100) * data?.price
+                : data?.price}
+            </span>
           </span>
           <div>
             <p className="text-sm mb-1.5 font-semibold  text-slate-800 ">
@@ -232,13 +282,22 @@ function ProductDetail({ data }) {
                 <button
                   key={index}
                   onClick={() => {
-                    filterImageByColor(name);
-                    setColor(name);
-                    router.replace(
-                      `/product/${data.id}?color=${name}&size=${
-                        size ? size : ""
-                      }`
+                    // router.replace(
+                    //   `/product/${data.id}?color=${name}&size=${
+                    //     size ? size : ""
+                    //   }`
+                    // );
+                    let newdata = data?.Images?.filter((data) => {
+                      return data.itemColor == name;
+                    });
+                    setImage(newdata.length > 0 ? newdata : data?.Images);
+
+                    let item = data?.items?.filter(
+                      (item) => item?.color === name
                     );
+                    setStock(item[0].QuantityAvailable);
+                    setProductId(item[0].id);
+                    setColor(name);
                   }}
                   className={`${
                     color == name
@@ -269,7 +328,7 @@ function ProductDetail({ data }) {
             </div>
           )}
           <div>
-            <p className="text-sm mb-1.5 font-semibold  text-slate-800 ">
+            <p className="text-sm mb-1.5  text-black font-semibold ">
               Size : <span>{size}</span>
             </p>
             <div className="flex gap-2      items-center flex-wrap">
@@ -380,23 +439,26 @@ function ProductDetail({ data }) {
             </div>
           </div>
           <div className="mt-2">
-            <div className="flex mb-4 text-slate-800 items-center gap-x-2 text-sm  ">
-              <p className=" ">Tags:</p>
+            <div className="flex mb-6 text-slate-800 items-center gap-x-2 text-sm  ">
+              <p className="text-black font-semibold ">Tags:</p>
               {data?.Tags?.split(",").map((name, index) => (
                 <span key={index}>{name + ","}</span>
               ))}
             </div>
             <div className="text-sm text-slate-800 flex flex-col gap-y-4">
-              {description?.blocks.map(({ text }, index) => (
-                <p key={index} className="  text-slate-800 ">
-                  {text}
-                </p>
-              ))}
+              {data?.Description ? (
+                <Editor
+                  readOnly={true}
+                  editorState={EditorState.createWithContent(
+                    convertFromRaw(JSON.parse(data?.Description))
+                  )}
+                />
+              ) : null}
             </div>
           </div>
         </div>
       </div>
-      <div className="container my-10 grid gap-5">
+      <div className="sm:container mx-auto px-2 my-10 grid gap-5">
         <div className="flex justify-end ">
           <Button
             name={"Write A Review"}
@@ -473,7 +535,7 @@ function ProductDetail({ data }) {
                       {review?.title}
                     </p>
                     <p class=" text-gray-500  text-sm min-h-5">
-                      {review?.title}
+                      {review?.description}
                     </p>
                   </div>
                 );
@@ -482,12 +544,12 @@ function ProductDetail({ data }) {
           )}
         </div>
       </div>
-
-      <div className=" container my-20">
+      {/* 
+      <div className=" sm:container mx-auto px-2 my-20">
         <Heading title={"Recent Products"} addClass={"mb-10 font-semibold"} />
 
         {productLoading ? (
-          <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-4 w-full  py-5">
+          <div className="grid lg:grid-cols-4 xs:grid-cols-2 grid-cols-1 gap-4 w-full  py-5">
             {Array(4)
               .fill()
               .map((_, index) => (
@@ -510,10 +572,10 @@ function ProductDetail({ data }) {
         ) : (
           <ProductCarousel
             data={sliderImages}
-            newClass={`xl:basis-1/4  md:basis-1/3  sm:basis-1/2 `}
+            newClass={`xl:basis-1/4  md:basis-1/3  xs:basis-1/2 `}
           />
         )}
-      </div>
+      </div> */}
     </main>
   );
 }

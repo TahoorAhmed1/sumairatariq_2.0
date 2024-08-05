@@ -4,7 +4,6 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { X } from "lucide-react";
 import { Separator } from "../ui/separator";
 import { ScrollArea } from "../ui/scroll-area";
 
