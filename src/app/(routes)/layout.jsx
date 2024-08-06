@@ -13,6 +13,7 @@ import { sortDataByDate } from "@/lib/utils";
 import { API } from "@/services";
 import { useHome } from "@/store/home";
 import axios from "axios";
+import Script from "next/script";
 
 const inter = Roboto({ subsets: ["latin"], weight: "400" });
 
@@ -82,6 +83,26 @@ export default function RootLayout({ children }) {
           <Loader />
         ) : (
           <>
+            <Script
+              strategy="beforeInteractive"
+              src="https://invitejs.trustpilot.com/tp.min.js"
+              onLoad={() => {
+                (function (w, d, s, n) {
+                  w.TrustpilotObject = n;
+                  w[n] =
+                    w[n] ||
+                    function () {
+                      (w[n].q = w[n].q || []).push(arguments);
+                    };
+                  const a = d.createElement(s);
+                  a.async = 1;
+                  a.src = "https://invitejs.trustpilot.com/tp.min.js";
+                  const f = d.getElementsByTagName(s)[0];
+                  f.parentNode.insertBefore(a, f);
+                })(window, document, "script", "tp");
+                tp("register", "6E54m9Ir9odOQr4Q");
+              }}
+            />
             <Header />
             <ToastContainer
               position="top-right"
@@ -103,6 +124,7 @@ export default function RootLayout({ children }) {
               <RiWhatsappFill className="whatsapp-icon" />
             </ReactWhatsapp>
             {children}
+
             <Footer />
           </>
         )}

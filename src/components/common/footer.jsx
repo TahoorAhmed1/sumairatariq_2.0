@@ -174,7 +174,7 @@ function Footer() {
         </div>
         <Separator className="border-t border-slate-500" />
         <div className="py-6 bg-black md:flex md:items-center md:justify-between">
-          <div className="sm:container px-2">
+          <div className=" container">
             <span className="text-sm text-white dark:text-gray-300 sm:text-center">
               © Copyright 2023 Sumaira Tariq. All Rights Reserved.
             </span>

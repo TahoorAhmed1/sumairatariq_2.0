@@ -32,7 +32,7 @@ function ProductDetail({ data }) {
   const [image, setImage] = useState([]);
   const [quantity, setQuantity] = useState(1);
   const [reviews, setReviews] = useState([]);
-
+  const [discount, setDiscount] = useState(0);
   const increment = () => {
     setQuantity(quantity + 1);
   };
@@ -64,6 +64,7 @@ function ProductDetail({ data }) {
   useEffect(() => {
     filterImageByColor(paramsColor);
     let item = data?.items?.filter((item) => item?.color === color);
+    setDiscount(item[0]?.Discount);
     setStock(item[0].QuantityAvailable);
     setProductId(item[0].id);
   }, [data]);
@@ -112,7 +113,7 @@ function ProductDetail({ data }) {
     const colors = data?.Color?.split(",") || [];
     return colors.includes(image.itemColor);
   });
-  console.log((data?.Discount / 100) * data?.price);
+  console.log(data);
 
   return (
     <main className="overflow-x-hidden">
@@ -261,15 +262,17 @@ function ProductDetail({ data }) {
         )}
         <div className=" w-[90%]  flex flex-col gap-y-5">
           <h1 className="lg:text-2xl text-xl font-semibold">{data?.name}</h1>
-          <span className="lg:text-2xl text-xl font-semibold text-[#d33]">
-            {data?.Discount !== 0 ? (
+          <span className="lg:text-2xl text-xl font-semibold text-[#d33] flex items-center gap-x-3">
+            {discount !== 0 ? (
               <span className="line-through text-[#bdbdbd]">
-                PKR. {data?.price}{" "}
+                <span className="mr-0.5">PKR.</span>
+                {data?.price}{" "}
               </span>
             ) : null}
             <span>
-              {data?.Discount !== 0
-                ? (data?.Discount / 100) * data?.price
+              <span className="mr-0.5">PKR.</span>
+              {discount !== 0
+                ? data?.price - (discount / 100) * data?.price
                 : data?.price}
             </span>
           </span>
@@ -544,12 +547,12 @@ function ProductDetail({ data }) {
           )}
         </div>
       </div>
-      {/* 
+
       <div className=" sm:container mx-auto px-2 my-20">
         <Heading title={"Recent Products"} addClass={"mb-10 font-semibold"} />
 
         {productLoading ? (
-          <div className="grid lg:grid-cols-4 xs:grid-cols-2 grid-cols-1 gap-4 w-full  py-5">
+          <div className="grid xl:grid-cols-5 lg:grid-cols-4 xs:grid-cols-2 grid-cols-1 gap-4 w-full  py-5">
             {Array(4)
               .fill()
               .map((_, index) => (
@@ -575,7 +578,7 @@ function ProductDetail({ data }) {
             newClass={`xl:basis-1/4  md:basis-1/3  xs:basis-1/2 `}
           />
         )}
-      </div> */}
+      </div>
     </main>
   );
 }

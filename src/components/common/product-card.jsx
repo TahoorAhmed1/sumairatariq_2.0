@@ -53,6 +53,7 @@ function ProductCard({ data }) {
     notify("error", "The product has been removed from your wishlist.");
   };
 
+  console.log("data", data);
   return (
     <Link
       onMouseEnter={() => setIsVisible(true)}
@@ -103,10 +104,15 @@ function ProductCard({ data }) {
             ) : null}
             <span>
               {data?.Discount !== 0
-                ? (data?.Discount / 100) * data?.price
+                ? data?.price - (data?.Discount / 100) * data?.price
                 : data?.price}
             </span>
           </div>
+          {data?.Discount !== 0 && (
+            <div className="flex  items-center justify-center bg-red-600 absolute rounded-full top-4 left-4 w-10 h-10 font-light text-white text-xs">
+              <span className="text-sm ">-</span> {data?.Discount}%
+            </div>
+          )}
           <div className="lg:block hidden">
             <AnimatePresence>
               {isVisible && (

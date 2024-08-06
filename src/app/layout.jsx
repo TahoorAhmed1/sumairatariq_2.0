@@ -4,6 +4,9 @@ import { ToastContainer } from "react-toastify";
 
 const inter = Roboto({ subsets: ["latin"], weight: "400" });
 import "react-toastify/dist/ReactToastify.css";
+import Head from "next/head";
+import TrustpilotWidget from "@/components/common/trustpilotWidget";
+import Script from "next/script";
 
 export const metadata = {
   title: "Sumaira Tariq || Were Different",
@@ -26,7 +29,6 @@ export default function RootLayout({ children }) {
           pauseOnHover
           theme="light"
         />
-
         {children}
       </body>
     </html>

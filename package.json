@@ -34,6 +34,7 @@
     "js-cookie": "^3.0.5",
     "lodash.debounce": "^4.0.8",
     "lucide-react": "^0.376.0",
+    "new": "file:",
     "next": "14.2.3",
     "query-string": "^9.0.0",
     "react": "^18",
