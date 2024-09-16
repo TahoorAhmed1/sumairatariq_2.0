@@ -49,7 +49,7 @@ function Footer() {
     <>
       <BottomNav token={token} />
 
-      <footer className="bg-black   lg:block hidden">
+      <footer className="bg-black  sm:pb-0 pb-16">
         <div className="container px-2 py-4">
           <div className="flex md:flex-row justify-between flex-col md:gap-10 gap-5  lg:py-6">
             <div className="flex flex-col gap-5">
